@@ -136,6 +136,9 @@ export interface CampaignProgress {
  */
 export interface VolumeProgress {
   phase: "trading" | "done";
+  /** Market (address) this wallet's window trades. Multi-market: each wallet is
+   * assigned one market; if this changes, a fresh window starts. */
+  market?: string;
   /** Wallet capital at window start — drives volume rates + thresholds. */
   initialBalance: number;
   /** This window's target volume multiple. Set per window (randomized for

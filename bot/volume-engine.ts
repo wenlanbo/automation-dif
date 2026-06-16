@@ -10,7 +10,8 @@ import * as notify from "./notify.ts";
 import { saveState } from "./state.ts";
 import type { BotState, MarketSnapshot, VolumeProgress } from "./types.ts";
 import type { ManagedWallet } from "./wallets.ts";
-import { loadVolumeConfig, type VolumeConfig } from "./volume-config.ts";
+import { loadVolumeConfig, type VolumeConfig, type VolumeOutcome, type VolumeMarket } from "./volume-config.ts";
+import { buildMarketSnapshot } from "./market.ts";
 import {
   computeRates,
   decideBuy,
@@ -49,12 +50,12 @@ interface Resolved {
   prices: Map<number, number>;
 }
 
-function resolveOutcomes(cfg: VolumeConfig, snap: MarketSnapshot): Resolved {
+function resolveOutcomes(outcomes: VolumeOutcome[], snap: MarketSnapshot): Resolved {
   const tokenIds: number[] = [];
   const weights: number[] = [];
   const names = new Map<number, string>();
   const prices = new Map<number, number>();
-  for (const want of cfg.outcomes) {
+  for (const want of outcomes) {
     const oc = snap.outcomes.find((o) => o.name.toLowerCase() === want.name.toLowerCase());
     if (!oc) continue;
     tokenIds.push(oc.tokenId);
@@ -273,19 +274,29 @@ export async function runVolumeStrategy(
   const cfg = loadVolumeConfig();
   if (!cfg.enabled) return;
   if (state.paused) return; // halted on a prior error — wait for dashboard resume
-  if (snapshot.isFinalised) return;
-
-  const res = resolveOutcomes(cfg, snapshot);
-  if (res.tokenIds.length === 0) {
-    await notify.warn("volume: none of the configured outcomes matched the market — skipping");
-    return;
-  }
   state.volume ??= {};
-  const market = getAddress(rc.targetMarket) as Address;
   const now = Date.now();
   const ids = cfg.wallets.length ? cfg.wallets : wallets.map((w) => w.id);
 
-  for (const id of ids) {
+  // Markets to trade: multi-market list if set, else single (targetMarket + outcomes).
+  const marketDefs: VolumeMarket[] =
+    cfg.markets && cfg.markets.length ? cfg.markets : [{ address: rc.targetMarket, outcomes: cfg.outcomes }];
+
+  // Build a snapshot per distinct market (reuse the passed target snapshot if it matches).
+  const snaps = new Map<string, MarketSnapshot>();
+  snaps.set(snapshot.address.toLowerCase(), snapshot);
+  for (const md of marketDefs) {
+    const key = md.address.toLowerCase();
+    if (snaps.has(key)) continue;
+    try {
+      snaps.set(key, await buildMarketSnapshot(rc.restBase, md.address));
+    } catch (e) {
+      await notify.warn(`volume: snapshot failed for ${md.label ?? md.address}: ${(e as Error).message}`);
+    }
+  }
+
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i]!;
     const w = wallets.find((x) => x.id === id);
     if (!w) {
       await notify.warn(`volume: wallet "${id}" not loaded — skipping`);
@@ -294,6 +305,20 @@ export async function runVolumeStrategy(
     // Yield to an active distribute-out campaign — one engine owns a wallet at a time.
     const camp = state.campaign?.[id];
     if (camp && camp.phase !== "done") continue;
+
+    // Assign this wallet a market (round-robin over the configured markets).
+    const md = marketDefs[i % marketDefs.length]!;
+    const snap = snaps.get(md.address.toLowerCase());
+    if (!snap || snap.isFinalised) {
+      if (!snap) await notify.warn(`volume ${w.label}: no snapshot for ${md.label ?? md.address} — skipping`);
+      continue;
+    }
+    const res = resolveOutcomes(md.outcomes, snap);
+    if (res.tokenIds.length === 0) {
+      await notify.warn(`volume ${w.label}: no configured outcomes matched ${md.label ?? md.address} — skipping`);
+      continue;
+    }
+    const market = getAddress(md.address) as Address;
     const addr = getAddress(w.address) as Address;
 
     try {
@@ -303,8 +328,9 @@ export async function runVolumeStrategy(
     // recycles its full deployed capital across back-to-back windows; the
     // dry-run paper ledger carries forward across windows too.
     let prog = state.volume[id];
-    if (!prog || (prog.phase === "done" && cfg.repeatWindow)) {
-      const carryPaper = rc.dryRun ? prog?.paper : undefined;
+    const marketChanged = !!prog?.market && prog.market.toLowerCase() !== market.toLowerCase();
+    if (!prog || (prog.phase === "done" && cfg.repeatWindow) || marketChanged) {
+      const carryPaper = rc.dryRun && !marketChanged ? prog?.paper : undefined;
       let portfolioVal: number;
       if (!rc.dryRun) {
         const [bal, us] = await Promise.all([
@@ -333,11 +359,12 @@ export async function runVolumeStrategy(
       }
       const windowNum = (prog?.windowsDone ?? 0) + 1;
       prog = freshProgress(cfg, portfolioVal, now, rc.dryRun);
+      prog.market = market;
       prog.windowsDone = windowNum - 1;
       if (rc.dryRun && carryPaper) prog.paper = carryPaper; // preserve paper holdings + cash
       state.volume[id] = prog;
       await notify.info(
-        `volume ${w.label}: window ${windowNum} started — capital ${f(portfolioVal, 2)} USDT, target ${prog.targetMultiple ?? cfg.targetVolumeMultiple}x over ${cfg.durationHours}h`,
+        `volume ${w.label} → ${md.label ?? md.address.slice(0, 10)}: window ${windowNum} started — capital ${f(portfolioVal, 2)} USDT, target ${prog.targetMultiple ?? cfg.targetVolumeMultiple}x over ${cfg.durationHours}h`,
       );
     }
     if (prog.phase === "done") continue;
@@ -436,6 +463,7 @@ export function volumeSummary(state: BotState): string[] {
   if (!state.volume) return [];
   return Object.entries(state.volume).map(([id, p]) => {
     const vol = p.cumulativeBuyVolume + p.cumulativeSellVolume;
-    return `• ${id} → ${p.phase}: vol ${f(vol, 0)} USDT, ${p.trades} trades`;
+    const mkt = p.market ? ` @${p.market.slice(0, 8)}…` : "";
+    return `• ${id}${mkt} → ${p.phase}: vol ${f(vol, 0)} USDT, ${p.trades} trades`;
   });
 }

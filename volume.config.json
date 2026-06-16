@@ -1,32 +1,363 @@
 {
   "enabled": false,
   "durationHours": 24,
-  "targetVolumeMultiple": 60,
+  "targetVolumeMultiple": 8,
   "continuousTrading": true,
   "forceLiquidationAtEnd": true,
-  "targetCashRatio": 0.3,
+  "targetCashRatio": 0.1,
   "sizeVolatility": 0.8,
   "liquidationRatio": 0.8,
-  "minOrderUsdt": 1.0,
+  "minOrderUsdt": 1,
   "slippagePct": 3,
   "maxTradeRetries": 5,
-  "buyIntervalSec": [120, 900],
-  "sellIntervalSec": [120, 900],
-  "intervalOverrideSec": [120, 900],
-  "buyPctRange": [0.1, 0.3],
-  "sellPctRange": [0.2, 0.6],
+  "buyIntervalSec": [
+    120,
+    900
+  ],
+  "sellIntervalSec": [
+    120,
+    900
+  ],
+  "buyPctRange": [
+    0.1,
+    0.3
+  ],
+  "sellPctRange": [
+    0.2,
+    0.6
+  ],
   "repeatWindow": true,
   "paperBalanceUsdt": 1000,
   "minBnbReserve": 0.005,
   "outcomes": [
-    { "name": "France", "weight": 0.25 },
-    { "name": "Spain", "weight": 0.25 },
-    { "name": "England", "weight": 0.12 },
-    { "name": "Portugal", "weight": 0.12 },
-    { "name": "Argentina", "weight": 0.1 },
-    { "name": "Brazil", "weight": 0.1 },
-    { "name": "Germany", "weight": 0.03 },
-    { "name": "Netherlands", "weight": 0.03 }
+    {
+      "name": "France",
+      "weight": 1
+    }
+  ],
+  "markets": [
+    {
+      "address": "0x7207f00d68749E5C048269Fd7e0CC2BE9B2a3F15",
+      "label": "Golden Boot",
+      "outcomes": [
+        {
+          "name": "Kylian Mbappé",
+          "weight": 17
+        },
+        {
+          "name": "Erling Haaland",
+          "weight": 9
+        },
+        {
+          "name": "Harry Kane",
+          "weight": 14
+        },
+        {
+          "name": "Vinícius Júnior",
+          "weight": 3
+        },
+        {
+          "name": "Rodrygo",
+          "weight": 1
+        },
+        {
+          "name": "Lionel Messi",
+          "weight": 5
+        },
+        {
+          "name": "Cristiano Ronaldo",
+          "weight": 4
+        },
+        {
+          "name": "Lautaro Martínez",
+          "weight": 2
+        },
+        {
+          "name": "Bukayo Saka",
+          "weight": 1
+        },
+        {
+          "name": "Mohamed Salah",
+          "weight": 1
+        },
+        {
+          "name": "Lamine Yamal",
+          "weight": 5
+        },
+        {
+          "name": "Ousmane Dembélé",
+          "weight": 3
+        },
+        {
+          "name": "Julián Alvarez",
+          "weight": 4
+        },
+        {
+          "name": "Raphinha",
+          "weight": 1
+        },
+        {
+          "name": "Michael Olise",
+          "weight": 4
+        },
+        {
+          "name": "Mikel Oyarzabal",
+          "weight": 4
+        },
+        {
+          "name": "Ferran Torres",
+          "weight": 1
+        },
+        {
+          "name": "Deniz Undav",
+          "weight": 1
+        },
+        {
+          "name": "Son Heung-min",
+          "weight": 1
+        },
+        {
+          "name": "Others",
+          "weight": 16
+        }
+      ]
+    },
+    {
+      "address": "0x415400d1Dd5D9A9506E99148f904fDD4964e6DE2",
+      "label": "Winning continent",
+      "outcomes": [
+        {
+          "name": "Africa",
+          "weight": 5
+        },
+        {
+          "name": "Asia",
+          "weight": 4
+        },
+        {
+          "name": "Europe",
+          "weight": 66
+        },
+        {
+          "name": "North America",
+          "weight": 3
+        },
+        {
+          "name": "Oceania",
+          "weight": 2
+        },
+        {
+          "name": "South America",
+          "weight": 20
+        },
+        {
+          "name": "N/A",
+          "weight": 0.5
+        }
+      ]
+    },
+    {
+      "address": "0x9253100ae205F3d688135cAecBd42c93DEC19FbF",
+      "label": "Golden Ball",
+      "outcomes": [
+        {
+          "name": "Kylian Mbappé",
+          "weight": 12
+        },
+        {
+          "name": "Erling Haaland",
+          "weight": 4
+        },
+        {
+          "name": "Harry Kane",
+          "weight": 8
+        },
+        {
+          "name": "Vinícius Júnior",
+          "weight": 4
+        },
+        {
+          "name": "Lionel Messi",
+          "weight": 10
+        },
+        {
+          "name": "Cristiano Ronaldo",
+          "weight": 4
+        },
+        {
+          "name": "Lautaro Martínez",
+          "weight": 2
+        },
+        {
+          "name": "Bukayo Saka",
+          "weight": 1
+        },
+        {
+          "name": "Mohamed Salah",
+          "weight": 1
+        },
+        {
+          "name": "Lamine Yamal",
+          "weight": 12
+        },
+        {
+          "name": "Ousmane Dembélé",
+          "weight": 4
+        },
+        {
+          "name": "Julián Alvarez",
+          "weight": 1
+        },
+        {
+          "name": "Raphinha",
+          "weight": 1
+        },
+        {
+          "name": "Michael Olise",
+          "weight": 11
+        },
+        {
+          "name": "Mikel Oyarzabal",
+          "weight": 1
+        },
+        {
+          "name": "Others",
+          "weight": 19
+        }
+      ]
+    },
+    {
+      "address": "0x22942F1B79F9c95BCC39605944aE4cB31F888082",
+      "label": "Silver Ball",
+      "outcomes": [
+        {
+          "name": "Kylian Mbappé",
+          "weight": 15
+        },
+        {
+          "name": "Erling Haaland",
+          "weight": 4
+        },
+        {
+          "name": "Harry Kane",
+          "weight": 10
+        },
+        {
+          "name": "Vinícius Júnior",
+          "weight": 4
+        },
+        {
+          "name": "Lionel Messi",
+          "weight": 2
+        },
+        {
+          "name": "Cristiano Ronaldo",
+          "weight": 4
+        },
+        {
+          "name": "Lautaro Martínez",
+          "weight": 1
+        },
+        {
+          "name": "Bukayo Saka",
+          "weight": 2
+        },
+        {
+          "name": "Mohamed Salah",
+          "weight": 1
+        },
+        {
+          "name": "Lamine Yamal",
+          "weight": 8
+        },
+        {
+          "name": "Ousmane Dembélé",
+          "weight": 11
+        },
+        {
+          "name": "Julián Alvarez",
+          "weight": 1
+        },
+        {
+          "name": "Raphinha",
+          "weight": 1
+        },
+        {
+          "name": "Michael Olise",
+          "weight": 5
+        },
+        {
+          "name": "Mikel Oyarzabal",
+          "weight": 1
+        },
+        {
+          "name": "Others",
+          "weight": 35
+        }
+      ]
+    },
+    {
+      "address": "0x063eEed4349cea75B19Da51F9335937DAb8571ed",
+      "label": "Highest goal scoring group",
+      "outcomes": [
+        {
+          "name": "A",
+          "weight": 5.5
+        },
+        {
+          "name": "B",
+          "weight": 0.8
+        },
+        {
+          "name": "C",
+          "weight": 1.5
+        },
+        {
+          "name": "D",
+          "weight": 13
+        },
+        {
+          "name": "E",
+          "weight": 23
+        },
+        {
+          "name": "F",
+          "weight": 31
+        },
+        {
+          "name": "G",
+          "weight": 1
+        },
+        {
+          "name": "H",
+          "weight": 0.7
+        },
+        {
+          "name": "I",
+          "weight": 8
+        },
+        {
+          "name": "J",
+          "weight": 3
+        },
+        {
+          "name": "K",
+          "weight": 4
+        },
+        {
+          "name": "L",
+          "weight": 2.5
+        },
+        {
+          "name": "No Winner",
+          "weight": 0.5
+        },
+        {
+          "name": "Tie",
+          "weight": 6
+        }
+      ]
+    }
   ],
   "wallets": []
 }

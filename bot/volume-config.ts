@@ -11,6 +11,16 @@ export interface VolumeOutcome {
   weight: number;
 }
 
+/** One market this bot trades, with its own outcomes + weights. */
+export interface VolumeMarket {
+  /** Market contract address. */
+  address: string;
+  /** Display label (Slack/logs). */
+  label?: string;
+  /** Outcomes to trade in this market + selection weights. */
+  outcomes: VolumeOutcome[];
+}
+
 export interface VolumeConfig {
   enabled: boolean;
   /** Total execution window X (hours). */
@@ -50,8 +60,12 @@ export interface VolumeConfig {
   paperBalanceUsdt: number;
   /** Halt live buys for a wallet if BNB (gas) drops below this. */
   minBnbReserve: number;
-  /** Outcomes to trade + weights. Defaults to the 8-country World Cup vector. */
+  /** Outcomes to trade + weights (single-market mode / fallback). */
   outcomes: VolumeOutcome[];
+  /** Multi-market mode: trade several markets at once. Each managed wallet is
+   * assigned one market (round-robin). When set + non-empty, this supersedes the
+   * single `outcomes`/TARGET_MARKET path. */
+  markets?: VolumeMarket[];
   /** Wallet ids this strategy manages. Empty = all loaded wallets. */
   wallets: string[];
 }
@@ -110,9 +124,20 @@ function validate(c: VolumeConfig): void {
     errs.push("targetCashRatio must be in [0, 1)");
   if (c.minOrderUsdt <= 0) errs.push("minOrderUsdt must be > 0");
   if (c.slippagePct < 0 || c.slippagePct >= 100) errs.push("slippagePct must be in [0, 100)");
-  if (!Array.isArray(c.outcomes) || c.outcomes.length === 0)
-    errs.push("outcomes must be a non-empty array");
-  if (c.outcomes.some((o) => !o.name || o.weight <= 0))
-    errs.push("each outcome needs a name and weight > 0");
+  const multi = Array.isArray(c.markets) && c.markets.length > 0;
+  if (multi) {
+    c.markets!.forEach((m, i) => {
+      if (!m.address) errs.push(`markets[${i}]: address required`);
+      if (!Array.isArray(m.outcomes) || m.outcomes.length === 0)
+        errs.push(`markets[${i}] (${m.label ?? m.address}): outcomes must be non-empty`);
+      else if (m.outcomes.some((o) => !o.name || o.weight <= 0))
+        errs.push(`markets[${i}] (${m.label ?? m.address}): each outcome needs a name and weight > 0`);
+    });
+  } else {
+    if (!Array.isArray(c.outcomes) || c.outcomes.length === 0)
+      errs.push("outcomes must be a non-empty array (or set markets[])");
+    if (c.outcomes.some((o) => !o.name || o.weight <= 0))
+      errs.push("each outcome needs a name and weight > 0");
+  }
   if (errs.length) throw new Error("invalid volume.config.json:\n  - " + errs.join("\n  - "));
 }

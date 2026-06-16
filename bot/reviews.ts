@@ -10,11 +10,30 @@ import * as chain from "./chain.ts";
 import * as notify from "./notify.ts";
 import { campaignSummary } from "./campaign.ts";
 import { volumeSummary } from "./volume-engine.ts";
+import { buildMarketSnapshot } from "./market.ts";
 import type { BotState, MarketSnapshot } from "./types.ts";
 import type { ManagedWallet } from "./wallets.ts";
 
 const n = (x: number, d = 2) => x.toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d });
 const sign = (x: number, d = 2) => `${x >= 0 ? "+" : ""}${n(x, d)}`;
+
+/** Snapshot for a given market, reusing the passed fallback or a per-call cache
+ * (so multi-market reviews price each wallet against the market it trades). */
+async function snapshotFor(
+  rc: RuntimeConfig,
+  market: string,
+  fallback: MarketSnapshot,
+  cache: Map<string, MarketSnapshot>,
+): Promise<MarketSnapshot> {
+  const key = market.toLowerCase();
+  if (key === fallback.address.toLowerCase()) return fallback;
+  let s = cache.get(key);
+  if (!s) {
+    s = await buildMarketSnapshot(rc.restBase, market);
+    cache.set(key, s);
+  }
+  return s;
+}
 
 /** Market-volume update — replaces the old market-summary heartbeat. */
 export async function maybeMarketReview(
@@ -71,12 +90,15 @@ export async function maybePortfolioReview(
   });
 
   if (trading.length) {
-    const market = getAddress(rc.targetMarket) as Address;
-    const priceByToken = new Map(snapshot.outcomes.map((o) => [o.tokenId, o.price]));
-    const nameByToken = new Map(snapshot.outcomes.map((o) => [o.tokenId, o.name]));
+    const cache = new Map<string, MarketSnapshot>();
     for (const w of trading) {
       try {
-        await notify.message(await buildReview(rc, state, w, market, priceByToken, nameByToken));
+        // Price each wallet against the market it actually trades (multi-market).
+        const mkt = state.volume?.[w.id]?.market ?? rc.targetMarket;
+        const snap = await snapshotFor(rc, mkt, snapshot, cache);
+        const priceByToken = new Map(snap.outcomes.map((o) => [o.tokenId, o.price]));
+        const nameByToken = new Map(snap.outcomes.map((o) => [o.tokenId, o.name]));
+        await notify.message(await buildReview(rc, state, w, getAddress(mkt) as Address, priceByToken, nameByToken));
       } catch (e) {
         await notify.error(`portfolio review ${w.label}: ${(e as Error).message}`);
       }
@@ -96,14 +118,17 @@ export async function buildPortfolioSummary(
   snapshot: MarketSnapshot,
   wallets: ManagedWallet[],
 ): Promise<string> {
-  const market = getAddress(rc.targetMarket) as Address;
-  const priceByToken = new Map(snapshot.outcomes.map((o) => [o.tokenId, o.price]));
+  const cache = new Map<string, MarketSnapshot>();
   let tUsdt = 0;
   let tPos = 0;
   const lines: string[] = [];
   for (const w of wallets) {
     const addr = getAddress(w.address) as Address;
     const vol = state.volume?.[w.id];
+    // Each wallet is valued against the market it trades (multi-market).
+    const mkt = vol?.market ?? rc.targetMarket;
+    const snap = await snapshotFor(rc, mkt, snapshot, cache);
+    const priceByToken = new Map(snap.outcomes.map((o) => [o.tokenId, o.price]));
     let usdt: number;
     let posVal = 0;
     if (rc.dryRun && vol?.paper) {
@@ -111,7 +136,7 @@ export async function buildPortfolioSummary(
       for (const [t, wei] of Object.entries(vol.paper.holdings))
         posVal += parseFloat(formatUnits(BigInt(wei), 18)) * (priceByToken.get(Number(t)) ?? 0);
     } else {
-      const [bal, us] = await Promise.all([chain.getBalances(addr), chain.getUserState(market, addr)]);
+      const [bal, us] = await Promise.all([chain.getBalances(addr), chain.getUserState(getAddress(mkt) as Address, addr)]);
       usdt = bal.usdt;
       for (const h of us.holdings)
         posVal += parseFloat(formatUnits(h.otHolding, 18)) * (priceByToken.get(h.tokenId) ?? 0);
