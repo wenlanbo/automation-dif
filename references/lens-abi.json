@@ -1,0 +1,761 @@
+[
+  {
+    "type": "function",
+    "name": "simulateMint",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "tokenId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "isExactIn",
+        "type": "bool",
+        "internalType": "bool"
+      },
+      {
+        "name": "dataSwap",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "dataGuess",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pre",
+        "type": "tuple",
+        "internalType": "struct SimulatedUserOtState",
+        "components": [
+          {
+            "name": "price",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "totalMarketCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "otHolding",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutPerOt",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "post",
+        "type": "tuple",
+        "internalType": "struct SimulatedUserOtState",
+        "components": [
+          {
+            "name": "price",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "totalMarketCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "otHolding",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutPerOt",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "quote",
+        "type": "tuple",
+        "internalType": "struct SimulatedMintQuote",
+        "components": [
+          {
+            "name": "collateralFromUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "collateralToTreasury",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "otToUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "simulateMintNoUser",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "tokenId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "isExactIn",
+        "type": "bool",
+        "internalType": "bool"
+      },
+      {
+        "name": "dataSwap",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "dataGuess",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pre",
+        "type": "tuple",
+        "internalType": "struct OtSnapshot",
+        "components": [
+          {
+            "name": "price",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "totalMarketCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutPerOt",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "post",
+        "type": "tuple",
+        "internalType": "struct OtSnapshot",
+        "components": [
+          {
+            "name": "price",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "totalMarketCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutPerOt",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "quote",
+        "type": "tuple",
+        "internalType": "struct SimulatedMintQuote",
+        "components": [
+          {
+            "name": "collateralFromUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "collateralToTreasury",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "otToUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "simulateRedeem",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "tokenId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "isExactIn",
+        "type": "bool",
+        "internalType": "bool"
+      },
+      {
+        "name": "dataSwap",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "dataGuess",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pre",
+        "type": "tuple",
+        "internalType": "struct SimulatedUserOtState",
+        "components": [
+          {
+            "name": "price",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "totalMarketCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "otHolding",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutPerOt",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "post",
+        "type": "tuple",
+        "internalType": "struct SimulatedUserOtState",
+        "components": [
+          {
+            "name": "price",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "totalMarketCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "otHolding",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutPerOt",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "quote",
+        "type": "tuple",
+        "internalType": "struct SimulatedRedeemQuote",
+        "components": [
+          {
+            "name": "collateralToUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "collateralToTreasury",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "otFromUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "collateralMintValue",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "simulateRedeemNoUser",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "tokenId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "isExactIn",
+        "type": "bool",
+        "internalType": "bool"
+      },
+      {
+        "name": "dataSwap",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "dataGuess",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "pre",
+        "type": "tuple",
+        "internalType": "struct OtSnapshot",
+        "components": [
+          {
+            "name": "price",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "totalMarketCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutPerOt",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "post",
+        "type": "tuple",
+        "internalType": "struct OtSnapshot",
+        "components": [
+          {
+            "name": "price",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "totalMarketCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutPerOt",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      },
+      {
+        "name": "quote",
+        "type": "tuple",
+        "internalType": "struct SimulatedRedeemQuote",
+        "components": [
+          {
+            "name": "collateralToUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "collateralToTreasury",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "otFromUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "collateralMintValue",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "snapshotMarket",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "snapshot",
+        "type": "tuple",
+        "internalType": "struct MarketSnapshot",
+        "components": [
+          {
+            "name": "ots",
+            "type": "tuple[]",
+            "internalType": "struct OtSnapshot[]",
+            "components": [
+              {
+                "name": "price",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "supply",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "totalMarketCap",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "payoutPerOt",
+                "type": "uint256",
+                "internalType": "uint256"
+              }
+            ]
+          },
+          {
+            "name": "deploy",
+            "type": "tuple",
+            "internalType": "struct MarketDeployParams",
+            "components": [
+              {
+                "name": "collateral",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "parentTokenId",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "questionId",
+                "type": "bytes32",
+                "internalType": "bytes32"
+              },
+              {
+                "name": "curve",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "timestampStart",
+                "type": "uint128",
+                "internalType": "uint128"
+              }
+            ]
+          },
+          {
+            "name": "state",
+            "type": "tuple",
+            "internalType": "struct MarketState",
+            "components": [
+              {
+                "name": "market",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "curve",
+                "type": "address",
+                "internalType": "contract IFTCurve"
+              },
+              {
+                "name": "timestampStart",
+                "type": "uint128",
+                "internalType": "uint128"
+              },
+              {
+                "name": "totalMarketCap",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "treasury",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "numOutcomes",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "timestampEnd",
+                "type": "uint128",
+                "internalType": "uint128"
+              },
+              {
+                "name": "answer",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "isFinalised",
+                "type": "bool",
+                "internalType": "bool"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "snapshotOt",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "tokenId",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "ot",
+        "type": "tuple",
+        "internalType": "struct OtSnapshot",
+        "components": [
+          {
+            "name": "price",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "totalMarketCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutPerOt",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "snapshotUserOtState",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "tokenId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "state",
+        "type": "tuple",
+        "internalType": "struct SimulatedUserOtState",
+        "components": [
+          {
+            "name": "price",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "supply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "totalMarketCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "otHolding",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutUser",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "payoutPerOt",
+            "type": "uint256",
+            "internalType": "uint256"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  }
+]

@@ -1,0 +1,81 @@
+[
+    {
+        "inputs": [],
+        "name": "FnSelectorNotRecognized",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "UnsupportedExecutionMode",
+        "type": "error"
+    },
+    {
+        "stateMutability": "payable",
+        "type": "fallback"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "mode",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "executionData",
+                "type": "bytes"
+            }
+        ],
+        "name": "execute",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "hash",
+                "type": "bytes32"
+            },
+            {
+                "internalType": "bytes",
+                "name": "signature",
+                "type": "bytes"
+            }
+        ],
+        "name": "isValidSignature",
+        "outputs": [
+            {
+                "internalType": "bytes4",
+                "name": "result",
+                "type": "bytes4"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes32",
+                "name": "mode",
+                "type": "bytes32"
+            }
+        ],
+        "name": "supportsExecutionMode",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "result",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "stateMutability": "payable",
+        "type": "receive"
+    }
+]

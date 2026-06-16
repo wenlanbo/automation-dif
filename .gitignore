@@ -1,0 +1,21 @@
+/node_modules
+/dist
+
+.env
+.env.*
+!.env.example
+
+# Bot runtime state (positions, PnL) — never commit
+bot-state.json
+bot-state.json.tmp
+*-state.json
+
+# Local Claude Code / editor settings (machine-specific)
+.claude/
+
+# Operator script holding real private keys — never commit
+scripts/set-wallets.sh
+set-wallets.sh
+
+# macOS
+.DS_Store

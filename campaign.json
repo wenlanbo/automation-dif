@@ -1,0 +1,11 @@
+{
+  "enabled": false,
+  "sellChunks": 10,
+  "sellEverySec": 290,
+  "slippagePct": 3,
+  "minUsdt": 0.5,
+  "legs": [
+    { "walletId": "wallet1", "outcome": "France" },
+    { "walletId": "wallet2", "outcome": "Brazil" }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "enabled": false,
+  "durationHours": 24,
+  "targetVolumeMultiple": 60,
+  "continuousTrading": true,
+  "forceLiquidationAtEnd": true,
+  "targetCashRatio": 0.3,
+  "sizeVolatility": 0.8,
+  "liquidationRatio": 0.8,
+  "minOrderUsdt": 1.0,
+  "slippagePct": 3,
+  "maxTradeRetries": 5,
+  "buyIntervalSec": [120, 900],
+  "sellIntervalSec": [120, 900],
+  "intervalOverrideSec": [120, 900],
+  "buyPctRange": [0.1, 0.3],
+  "sellPctRange": [0.2, 0.6],
+  "repeatWindow": true,
+  "paperBalanceUsdt": 1000,
+  "minBnbReserve": 0.005,
+  "outcomes": [
+    { "name": "France", "weight": 0.25 },
+    { "name": "Spain", "weight": 0.25 },
+    { "name": "England", "weight": 0.12 },
+    { "name": "Portugal", "weight": 0.12 },
+    { "name": "Argentina", "weight": 0.1 },
+    { "name": "Brazil", "weight": 0.1 },
+    { "name": "Germany", "weight": 0.03 },
+    { "name": "Netherlands", "weight": 0.03 }
+  ],
+  "wallets": []
+}

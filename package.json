@@ -1,0 +1,31 @@
+{
+  "name": "wenlanbot-v2",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "bun": ">=1.3.0"
+  },
+  "scripts": {
+    "trade": "bun scripts/trade.ts",
+    "trade:fast": "bun dist/trade.js",
+    "build": "bun build --target=bun --minify --sourcemap=inline --outfile dist/trade.js scripts/trade.ts",
+    "gen-abis": "bun scripts/gen-abis.ts",
+    "typecheck": "tsc --noEmit",
+    "bench": "bash bench/run.sh",
+    "bot": "bun bot/bot.ts",
+    "bot:server": "bun bot/server.ts",
+    "bot:run": "bun bot/bot.ts run",
+    "bot:scan": "bun bot/bot.ts scan",
+    "bot:status": "bun bot/bot.ts status",
+    "bot:arm": "bun bot/bot.ts arm",
+    "vol:sim": "bun scripts/volume-sim.ts"
+  },
+  "dependencies": {
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.6.0"
+  }
+}

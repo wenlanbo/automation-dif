@@ -1,0 +1,28 @@
+{
+  "entry": {
+    "rules": [
+      { "metric": "priceChange1h", "op": ">", "value": 3 },
+      { "metric": "volumeChange24h", "op": ">", "value": 20 },
+      { "metric": "buyRatio", "op": ">", "value": 0.1 }
+    ],
+    "combine": "all",
+    "minPriceUsdt": 0.01,
+    "maxPriceUsdt": 0.95
+  },
+  "exit": {
+    "takeProfitPct": 25,
+    "stopLossPct": 15,
+    "maxHoldHours": 72,
+    "exitBeforeEndHours": 6
+  },
+  "sizing": {
+    "usdtPerTrade": 5,
+    "maxConcurrentPositions": 3,
+    "maxTotalExposureUsdt": 25,
+    "reentryCooldownHours": 12
+  },
+  "execution": {
+    "slippagePct": 2,
+    "minBnbReserve": 0.005
+  }
+}

@@ -1,0 +1,662 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_c1",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_c2",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_start",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_timeKink",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_timeExponent",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_growthC1",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_growthC2",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tick",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "ClampIncorrectBounds",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      }
+    ],
+    "name": "CurveInvalidCost",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "otDelta",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tick",
+        "type": "uint256"
+      }
+    ],
+    "name": "CurveOtDeltaNotOnTick",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GuessEpsAboveMax",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "maxIterations",
+        "type": "uint256"
+      }
+    ],
+    "name": "GuessExceedMaxInterpolationIterations",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "maxIterations",
+        "type": "uint256"
+      }
+    ],
+    "name": "GuessExceedMaxIterations",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "len",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "required",
+        "type": "uint256"
+      }
+    ],
+    "name": "GuessInvalidDataLength",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GuessMaxIterationsZero",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "current",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "target",
+        "type": "uint256"
+      }
+    ],
+    "name": "GuessTargetUnreachable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MarketSwapAmountCannotBeZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SafeCastOverflow",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "c1",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "c2",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "calMarginalPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "otDelta",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "calMintCostByOtDelta",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "collateralFromUser",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "collateralToTreasury",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "collateralDelta",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "calOtDeltaByMintCost",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "otDelta",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "collateralFromUser",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "collateralDelta",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "calOtDeltaByRedeemValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "otDelta",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "collateralToUser",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "otDelta",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "calRedeemValueByOtDelta",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "collateralToUser",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "collateralToTreasury",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "otFrom",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "otDelta",
+        "type": "uint256"
+      }
+    ],
+    "name": "extrapolateMintForOffchainOnly",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "collateralFromUser",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "collateralToTreasury",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "otFrom",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "otDelta",
+        "type": "uint256"
+      }
+    ],
+    "name": "extrapolateRedeemForOffchainOnly",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "collateralToUser",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "collateralToTreasury",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "growthC1",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "growthC2",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "readCurve",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "c1",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "c2",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "start",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PowerMath.CurveParams",
+        "name": "curve",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "readMarketState",
+    "outputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "timeFromStartToEnd",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "timeFromStartToRedeem",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "timeKink",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "timeExponent",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "growthC1",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "growthC2",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct RedeemMath.RedeemParams",
+            "name": "redeem",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "feeRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "otCurrent",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tick",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PowerCurve.MarketState",
+        "name": "state",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "otSupply",
+        "type": "uint256"
+      }
+    ],
+    "name": "simCost",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "cost",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "otSupply",
+        "type": "uint256"
+      }
+    ],
+    "name": "simMarginalPrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "start",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tick",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "timeExponent",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "timeKink",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

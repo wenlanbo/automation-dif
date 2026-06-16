@@ -1,0 +1,514 @@
+[
+    {
+        "type": "function",
+        "name": "MAXIMUM_INTEGRATOR_FEE_BPS",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "claimAllSimple",
+        "inputs": [
+            {
+                "name": "market",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "receiver",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "payout",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "controllerV1",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "controllerV2",
+        "inputs": [],
+        "outputs": [
+            {
+                "name": "",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "initialize",
+        "inputs": [],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "isMarketVersion",
+        "inputs": [
+            {
+                "name": "market",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint8",
+                "internalType": "uint8"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "type": "function",
+        "name": "multicall",
+        "inputs": [
+            {
+                "name": "calls",
+                "type": "tuple[]",
+                "internalType": "struct Call[]",
+                "components": [
+                    {
+                        "name": "allowFailure",
+                        "type": "bool",
+                        "internalType": "bool"
+                    },
+                    {
+                        "name": "callData",
+                        "type": "bytes",
+                        "internalType": "bytes"
+                    }
+                ]
+            }
+        ],
+        "outputs": [
+            {
+                "name": "returnDatas",
+                "type": "tuple[]",
+                "internalType": "struct Result[]",
+                "components": [
+                    {
+                        "name": "success",
+                        "type": "bool",
+                        "internalType": "bool"
+                    },
+                    {
+                        "name": "returnData",
+                        "type": "bytes",
+                        "internalType": "bytes"
+                    }
+                ]
+            }
+        ],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "swap",
+        "inputs": [
+            {
+                "name": "market",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "receiver",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "tokenId",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "params",
+                "type": "tuple",
+                "internalType": "struct SwapParams",
+                "components": [
+                    {
+                        "name": "isMint",
+                        "type": "bool",
+                        "internalType": "bool"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "isExactIn",
+                        "type": "bool",
+                        "internalType": "bool"
+                    },
+                    {
+                        "name": "minOutOrMaxIn",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    }
+                ]
+            },
+            {
+                "name": "dataSwap",
+                "type": "bytes",
+                "internalType": "bytes"
+            },
+            {
+                "name": "dataGuess",
+                "type": "bytes",
+                "internalType": "bytes"
+            },
+            {
+                "name": "integrator",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "integratorFeeBps",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "swapMarketV1",
+        "inputs": [
+            {
+                "name": "market",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "receiver",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "tokenId",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "params",
+                "type": "tuple",
+                "internalType": "struct SwapParams",
+                "components": [
+                    {
+                        "name": "isMint",
+                        "type": "bool",
+                        "internalType": "bool"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "isExactIn",
+                        "type": "bool",
+                        "internalType": "bool"
+                    },
+                    {
+                        "name": "minOutOrMaxIn",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    }
+                ]
+            },
+            {
+                "name": "dataSwap",
+                "type": "bytes",
+                "internalType": "bytes"
+            },
+            {
+                "name": "dataGuess",
+                "type": "bytes",
+                "internalType": "bytes"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "swapMarketV2",
+        "inputs": [
+            {
+                "name": "market",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "receiver",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "tokenId",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "params",
+                "type": "tuple",
+                "internalType": "struct SwapParams",
+                "components": [
+                    {
+                        "name": "isMint",
+                        "type": "bool",
+                        "internalType": "bool"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    },
+                    {
+                        "name": "isExactIn",
+                        "type": "bool",
+                        "internalType": "bool"
+                    },
+                    {
+                        "name": "minOutOrMaxIn",
+                        "type": "uint256",
+                        "internalType": "uint256"
+                    }
+                ]
+            },
+            {
+                "name": "dataSwap",
+                "type": "bytes",
+                "internalType": "bytes"
+            },
+            {
+                "name": "dataGuess",
+                "type": "bytes",
+                "internalType": "bytes"
+            },
+            {
+                "name": "integrator",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "name": "integratorFeeBps",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "event",
+        "name": "Initialized",
+        "inputs": [
+            {
+                "name": "version",
+                "type": "uint64",
+                "indexed": false,
+                "internalType": "uint64"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "MintIntegratorFee",
+        "inputs": [
+            {
+                "name": "caller",
+                "type": "address",
+                "indexed": true,
+                "internalType": "address"
+            },
+            {
+                "name": "integrator",
+                "type": "address",
+                "indexed": true,
+                "internalType": "address"
+            },
+            {
+                "name": "market",
+                "type": "address",
+                "indexed": false,
+                "internalType": "address"
+            },
+            {
+                "name": "tokenId",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            },
+            {
+                "name": "collateralFromUser",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            },
+            {
+                "name": "collateralToIntegrator",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "event",
+        "name": "RedeemIntegratorFee",
+        "inputs": [
+            {
+                "name": "caller",
+                "type": "address",
+                "indexed": true,
+                "internalType": "address"
+            },
+            {
+                "name": "integrator",
+                "type": "address",
+                "indexed": true,
+                "internalType": "address"
+            },
+            {
+                "name": "market",
+                "type": "address",
+                "indexed": false,
+                "internalType": "address"
+            },
+            {
+                "name": "tokenId",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            },
+            {
+                "name": "collateralToUser",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            },
+            {
+                "name": "collateralToIntegrator",
+                "type": "uint256",
+                "indexed": false,
+                "internalType": "uint256"
+            }
+        ],
+        "anonymous": false
+    },
+    {
+        "type": "error",
+        "name": "InvalidInitialization",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "MarketZeroAddress",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "MarketZeroCostBasis",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "NotInitializing",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "ReentrancyGuardReentrantCall",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "RouterDbCViolated",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "RouterIntegratorFeeTooHigh",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "RouterInvalidIntegrator",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "RouterInvalidMarket",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "RouterInvalidSwapAmount",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "RouterNotClaimableYet",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "RouterSlippage",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "RouterStaticCallFailed",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "Safe6909TransferFailed",
+        "inputs": []
+    },
+    {
+        "type": "error",
+        "name": "SafeERC20FailedOperation",
+        "inputs": [
+            {
+                "name": "token",
+                "type": "address",
+                "internalType": "address"
+            }
+        ]
+    }
+]
