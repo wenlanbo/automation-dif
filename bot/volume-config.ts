@@ -66,6 +66,13 @@ export interface VolumeConfig {
    * assigned one market (round-robin). When set + non-empty, this supersedes the
    * single `outcomes`/TARGET_MARKET path. */
   markets?: VolumeMarket[];
+  /** Markets (addresses) to WIND DOWN: stop trading + gradually ladder-sell any
+   * holdings to cash. Must still be present in `markets` (for outcomes/snapshot). */
+  exitMarkets?: string[];
+  /** Fraction of remaining holdings to sell per exit action (default 0.15). */
+  exitChunkPct: number;
+  /** Seconds between exit ladder-sells per wallet+market (default 600 = 10 min). */
+  exitEverySec: number;
   /** Wallet ids this strategy manages. Empty = all loaded wallets. */
   wallets: string[];
 }
@@ -89,6 +96,8 @@ export const DEFAULT_VOLUME_CONFIG: VolumeConfig = {
   repeatWindow: false,
   paperBalanceUsdt: 1000,
   minBnbReserve: 0.005,
+  exitChunkPct: 0.15,
+  exitEverySec: 600,
   outcomes: [
     { name: "France", weight: 0.2 },
     { name: "Spain", weight: 0.2 },

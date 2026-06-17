@@ -265,6 +265,102 @@ async function pauseOnError(rc: RuntimeConfig, state: BotState, reason: string):
   );
 }
 
+/**
+ * Wind down EXIT markets: stop trading them and gradually ladder-sell any
+ * holdings to cash (exitChunkPct of remaining per exitEverySec, sweeping dust),
+ * until flat. Live-only. Pauses the strategy on a persistent sell failure.
+ */
+async function runExits(
+  rc: RuntimeConfig,
+  cfg: VolumeConfig,
+  wallets: ManagedWallet[],
+  state: BotState,
+  snaps: Map<string, MarketSnapshot>,
+  ids: string[],
+): Promise<void> {
+  if (rc.dryRun) return; // wind-down operates on real on-chain holdings
+  const exitDefs = (cfg.markets ?? []).filter((m) =>
+    (cfg.exitMarkets ?? []).some((a) => a.toLowerCase() === m.address.toLowerCase()),
+  );
+  if (!exitDefs.length) return;
+  state.volumeExit ??= {};
+  const now = Date.now();
+  const chunkBps = BigInt(Math.max(1, Math.round((cfg.exitChunkPct ?? 0.15) * 10000)));
+  const tries = cfg.maxTradeRetries ?? 5;
+
+  for (const id of ids) {
+    const w = wallets.find((x) => x.id === id);
+    if (!w) continue;
+    const addr = getAddress(w.address) as Address;
+    for (const md of exitDefs) {
+      const lc = md.address.toLowerCase();
+      const key = `${id}|${lc}`;
+      const ex = state.volumeExit[key];
+      if (ex?.done) continue;
+      if (ex && now - new Date(ex.at).getTime() < cfg.exitEverySec * 1000) continue;
+      const snap = snaps.get(lc);
+      if (!snap) continue;
+      const market = getAddress(md.address) as Address;
+      const priceByToken = new Map(snap.outcomes.map((o) => [o.tokenId, o.price]));
+      const nameByToken = new Map(snap.outcomes.map((o) => [o.tokenId, o.name]));
+
+      let us;
+      try {
+        us = await retry(() => chain.getUserState(market, addr));
+      } catch {
+        continue; // transient read failure — try next cycle
+      }
+      const held = us.holdings.filter((h) => h.otHolding > 0n);
+      const totalVal = held.reduce(
+        (s, h) => s + parseFloat(formatUnits(h.otHolding, 18)) * (priceByToken.get(h.tokenId) ?? 0),
+        0,
+      );
+      if (totalVal < cfg.minOrderUsdt) {
+        state.volumeExit[key] = { at: new Date(now).toISOString(), done: true };
+        saveState(rc.statePath, state);
+        await notify.info(`exit ${w.label} @ ${md.label ?? lc.slice(0, 10)}: position cleared ✅`);
+        continue;
+      }
+
+      try {
+        for (const h of held) {
+          const price = priceByToken.get(h.tokenId) ?? 0;
+          if (price <= 0) continue;
+          const holdingWei = h.otHolding;
+          const holdingUsd = parseFloat(formatUnits(holdingWei, 18)) * price;
+          // chunk = exitChunkPct of remaining; sweep the whole lot if it's small.
+          let otWei = floorTick((holdingWei * chunkBps) / 10000n);
+          if (holdingUsd <= cfg.minOrderUsdt * 2 || otWei <= 0n) otWei = floorTick(holdingWei);
+          if (otWei <= 0n) continue;
+          let sim!: Awaited<ReturnType<typeof chain.simulateSell>>;
+          let lastErr: unknown = null;
+          for (let a = 1; a <= tries; a++) {
+            try {
+              sim = await chain.simulateSell(market, h.tokenId, otWei);
+              await chain.executeSell(w.signer, market, h.tokenId, otWei, cfg.slippagePct, sim);
+              lastErr = null;
+              break;
+            } catch (e) {
+              lastErr = e;
+              if (a < tries) await new Promise((r) => setTimeout(r, 700 * a));
+            }
+          }
+          if (lastErr) throw new Error(`exit sell ${h.tokenId} failed after ${tries} tries: ${(lastErr as Error).message}`);
+          const name = nameByToken.get(h.tokenId) ?? `Token ${h.tokenId}`;
+          const line = `🔻 [${notify.tagStr()}] exit ${w.label} @ ${md.label ?? lc.slice(0, 8)} SELL ${name} ${f(parseFloat(formatUnits(otWei, 18)))} OT → ${f(sim.collateralUsdt, 2)} USDT @ ${f(sim.priceBefore, 4)}`;
+          console.log("  [exit] " + line);
+          await notify.message(line);
+        }
+        state.volumeExit[key] = { at: new Date(now).toISOString() };
+        saveState(rc.statePath, state);
+      } catch (e) {
+        await pauseOnError(rc, state, `exit ${w.label} @ ${md.label ?? lc}: ${(e as Error).message}`);
+        return;
+      }
+    }
+  }
+}
+
 export async function runVolumeStrategy(
   rc: RuntimeConfig,
   wallets: ManagedWallet[],
@@ -295,6 +391,19 @@ export async function runVolumeStrategy(
     }
   }
 
+  // Wind down any EXIT markets (ladder-sell to cash), then stop trading them.
+  await runExits(rc, cfg, wallets, state, snaps, ids);
+  if (state.paused) return; // an exit sell failed → paused
+
+  // Active markets = configured markets minus those being wound down.
+  const exitSet = new Set((cfg.exitMarkets ?? []).map((a) => a.toLowerCase()));
+  const activeDefs = marketDefs.filter((m) => !exitSet.has(m.address.toLowerCase()));
+  if (activeDefs.length === 0) return; // everything is winding down — no active trading
+
+  // Stable wallet→market assignment: keep a wallet's current market if it's still
+  // active (don't reshuffle/strand positions); only (re)assign wallets whose market
+  // was removed or never set, distributed round-robin across the active markets.
+  let assignCounter = 0;
   for (let i = 0; i < ids.length; i++) {
     const id = ids[i]!;
     const w = wallets.find((x) => x.id === id);
@@ -306,8 +415,12 @@ export async function runVolumeStrategy(
     const camp = state.campaign?.[id];
     if (camp && camp.phase !== "done") continue;
 
-    // Assign this wallet a market (round-robin over the configured markets).
-    const md = marketDefs[i % marketDefs.length]!;
+    const cur = state.volume?.[id]?.market?.toLowerCase();
+    let md = cur ? activeDefs.find((m) => m.address.toLowerCase() === cur) : undefined;
+    if (!md) {
+      md = activeDefs[assignCounter % activeDefs.length]!;
+      assignCounter++;
+    }
     const snap = snaps.get(md.address.toLowerCase());
     if (!snap || snap.isFinalised) {
       if (!snap) await notify.warn(`volume ${w.label}: no snapshot for ${md.label ?? md.address} — skipping`);

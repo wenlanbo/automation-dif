@@ -186,6 +186,8 @@ export interface BotState {
   volumeDoneAlerted?: boolean;
   /** Per-wallet gas-runway tracking for the 6h-ahead low-BNB alert. */
   gasWatch?: Record<string, { bnb: number; at: string; alertedAt?: string }>;
+  /** Exit/wind-down throttle, keyed by `${walletId}|${marketAddrLower}`. */
+  volumeExit?: Record<string, { at: string; done?: boolean }>;
 }
 
 /** Live wallet runtime info (not persisted — keys live only in memory). */

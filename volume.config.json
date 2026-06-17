@@ -359,5 +359,11 @@
       ]
     }
   ],
-  "wallets": []
+  "wallets": [],
+  "exitMarkets": [
+    "0x22942F1B79F9c95BCC39605944aE4cB31F888082",
+    "0x415400d1Dd5D9A9506E99148f904fDD4964e6DE2"
+  ],
+  "exitChunkPct": 0.15,
+  "exitEverySec": 600
 }
