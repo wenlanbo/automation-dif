@@ -178,7 +178,7 @@
         },
         {
           "name": "Lionel Messi",
-          "weight": 10
+          "weight": 12
         },
         {
           "name": "Cristiano Ronaldo",
@@ -222,7 +222,7 @@
         },
         {
           "name": "Others",
-          "weight": 19
+          "weight": 17
         }
       ]
     },
