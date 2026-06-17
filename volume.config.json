@@ -42,15 +42,15 @@
       "outcomes": [
         {
           "name": "Kylian Mbappé",
-          "weight": 17
+          "weight": 16
         },
         {
           "name": "Erling Haaland",
-          "weight": 9
+          "weight": 8
         },
         {
           "name": "Harry Kane",
-          "weight": 14
+          "weight": 9
         },
         {
           "name": "Vinícius Júnior",
@@ -62,7 +62,7 @@
         },
         {
           "name": "Lionel Messi",
-          "weight": 5
+          "weight": 16
         },
         {
           "name": "Cristiano Ronaldo",
@@ -82,7 +82,7 @@
         },
         {
           "name": "Lamine Yamal",
-          "weight": 5
+          "weight": 4
         },
         {
           "name": "Ousmane Dembélé",
@@ -90,7 +90,7 @@
         },
         {
           "name": "Julián Alvarez",
-          "weight": 4
+          "weight": 3
         },
         {
           "name": "Raphinha",
@@ -118,7 +118,7 @@
         },
         {
           "name": "Others",
-          "weight": 16
+          "weight": 15
         }
       ]
     },
