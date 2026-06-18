@@ -1,10 +1,10 @@
 {
   "enabled": true,
   "durationHours": 24,
-  "targetVolumeMultiple": 8,
+  "targetVolumeMultiple": 40,
   "continuousTrading": true,
   "forceLiquidationAtEnd": true,
-  "targetCashRatio": 0.1,
+  "targetCashRatio": 0.2,
   "sizeVolatility": 0.8,
   "liquidationRatio": 0.8,
   "minOrderUsdt": 1,
@@ -365,5 +365,9 @@
     "0x415400d1Dd5D9A9506E99148f904fDD4964e6DE2"
   ],
   "exitChunkPct": 0.15,
-  "exitEverySec": 600
+  "exitEverySec": 600,
+  "intervalOverrideSec": [
+    190,
+    1500
+  ]
 }
